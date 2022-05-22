@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /$2
+    kubernetes.io/ingress.allow-http: "True"
+    kubernetes.io/ingress.class: nsx
+    ncp/use-regex: "True"
+  name: grafana
+  namespace: monitoring
+spec:
+  rules:
+  - host: dev01.in.staffservice.co.jp
+    http:
+      paths:
+      - backend:
+          service:
+            name: grafana-v852
+            #name: grafana
+            port:
+              # name: http
+              number: 80
+        path: /grafana(/|$)(.*)
+        pathType: ImplementationSpecific
+  tls:
+  - secretName: dev-ingress-cert
