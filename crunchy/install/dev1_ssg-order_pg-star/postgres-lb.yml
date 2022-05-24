@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: psql-1
+    labels:
+      app: psql-1
+    namespace: ssg-order
+spec:
+    selector:
+      postgres-operator.crunchydata.com/cluster: hippo-pg-star
+      postgres-operator.crunchydata.com/role: master
+    type: LoadBalancer
+    ports:
+      - port: 5432
+        targetPort: 5432
+        protocol: TCP
+status:
+  loadBalancer:
+    ingress:
+    - ip: "172.23.55.51"

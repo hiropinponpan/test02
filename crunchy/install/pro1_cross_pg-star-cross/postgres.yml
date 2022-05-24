@@ -1,0 +1,77 @@
+apiVersion: postgres-operator.crunchydata.com/v1beta1
+kind: PostgresCluster
+metadata:
+  name: hippo-pg-star-cross
+  namespace: cross
+spec:
+  image: promspksharbor.in.staffservice.co.jp/library/crunchy-postgres:centos8-13.5-0
+  postgresVersion: 13
+  instances:
+    - name: psql-1
+      replicas: 1
+      dataVolumeClaimSpec:
+        accessModes:
+        - "ReadWriteOnce"
+        storageClassName: "csi"
+        resources:
+          requests:
+            storage: "500Gi"
+      resources:
+        requests:
+          cpu: "10"
+          memory: "24Gi"
+        limits:
+          cpu: "10"
+          memory: "24Gi"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchLabels:
+                postgres-operator.crunchydata.com/cluster: hippo-pg-star-cross
+                postgres-operator.crunchydata.com/instance-set: psql-1
+  databaseInitSQL:
+    key: init.sql
+    name: hippo-init-sql
+  backups:
+    pgbackrest:
+      image: promspksharbor.in.staffservice.co.jp/library/crunchy-pgbackrest:centos8-2.36-0
+      configuration:
+      - secret:
+          name: pgo-s3-creds
+      global:
+        repo1-path: /cross/pg-star-cross
+        repo1-storage-verify-tls: "n"
+        repo1-s3-uri-style: path
+      repos:
+      - name: repo1
+        s3:
+          bucket: "crunchy-postgresql-backup"
+          endpoint: "nginx-rp-for-minio.pgo-star"
+          region: "Tokyo"
+  patroni:
+    dynamicConfiguration:
+      postgresql:
+        parameters:
+          max_connections: 200
+          shared_buffers: 6GB
+          effective_cache_size: 18GB
+          maintenance_work_mem: 1536MB
+          checkpoint_completion_target: 0.9
+          wal_buffers: 16MB
+          default_statistics_target: 100
+          random_page_cost: 1.1
+          effective_io_concurrency: 200
+          work_mem: 7864kB
+          min_wal_size: 1GB
+          max_wal_size: 4GB
+          log_connections: on
+          dynamic_shared_memory_type:  posix
+          log_destination: stderr
+          logging_collector: off
+          default_transaction_read_only: off
+        pg_hba:
+        - local all all   trust
+        - host all all 127.0.0.1/32 trust
+        - host all all 0.0.0.0/0 md5

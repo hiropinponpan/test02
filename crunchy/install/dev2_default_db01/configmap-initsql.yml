@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hippo-init-sql
+  namespace: default
+data:
+  init.sql: |-
+    CREATE ROLE root WITH SUPERUSER LOGIN PASSWORD 'Sshd-01-P@ss';
+    CREATE DATABASE app;
+    GRANT ALL PRIVILEGES ON DATABASE app TO root;
+    CREATE DATABASE appistio;
+    GRANT ALL PRIVILEGES ON DATABASE appistio TO root;
+    CREATE DATABASE hideinfo;
+    GRANT ALL PRIVILEGES ON DATABASE hideinfo TO root;

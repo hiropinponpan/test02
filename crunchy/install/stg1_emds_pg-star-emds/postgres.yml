@@ -1,0 +1,69 @@
+apiVersion: postgres-operator.crunchydata.com/v1beta1
+kind: PostgresCluster
+metadata:
+  name: hippo-pg-star-emds
+  namespace: emds
+spec:
+  image: devmspksharbor.in.staffservice.co.jp/library/crunchy-postgres:centos8-13.5-0
+  postgresVersion: 13
+  instances:
+    - name: psql-1
+      replicas: 1
+      dataVolumeClaimSpec:
+        accessModes:
+        - "ReadWriteOnce"
+        storageClassName: "csi"
+        resources:
+          requests:
+            storage: "500Gi"
+      resources:
+        requests:
+          cpu: "1"
+          memory: "6Gi"
+        limits:
+          cpu: "2"
+          memory: "8Gi"
+  databaseInitSQL:
+    key: init.sql
+    name: hippo-init-sql
+  backups:
+    pgbackrest:
+      image: devmspksharbor.in.staffservice.co.jp/library/crunchy-pgbackrest:centos8-2.36-0
+      configuration:
+      - secret:
+          name: pgo-s3-creds
+      global:
+        repo1-path: /emds/pg-star-emds
+        repo1-storage-verify-tls: "n"
+        repo1-s3-uri-style: path
+      repos:
+      - name: repo1
+        s3:
+          bucket: "crunchy-wal-backup"
+          endpoint: "nginx-rp-for-minio.pgo-star"
+          region: "Tokyo"
+  patroni:
+    dynamicConfiguration:
+      postgresql:
+        parameters:
+          max_connections: 200
+          shared_buffers: 2GB
+          effective_cache_size: 6GB
+          maintenance_work_mem: 512MB
+          checkpoint_completion_target: 0.9
+          wal_buffers: 16MB
+          default_statistics_target: 100
+          random_page_cost: 1.1
+          effective_io_concurrency: 200
+          work_mem: 10485kB
+          min_wal_size: 1GB
+          max_wal_size: 4GB
+          log_connections: on
+          dynamic_shared_memory_type:  posix
+          log_destination: stderr
+          logging_collector: off
+          default_transaction_read_only: off
+        pg_hba:
+        - local all all   trust
+        - host all all 127.0.0.1/32 trust
+        - host all all 0.0.0.0/0 md5
