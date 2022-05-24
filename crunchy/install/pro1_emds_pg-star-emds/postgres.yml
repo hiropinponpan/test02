@@ -39,7 +39,7 @@ spec:
       repos:
       - name: repo1
         s3:
-          bucket: "crunchy-postgresql-backup"
+          bucket: "crunchy-wal-backup"
           endpoint: "nginx-rp-for-minio.pgo-star"
           region: "Tokyo"
   patroni:
