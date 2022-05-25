@@ -1,0 +1,290 @@
+apiVersion: postgres-operator.crunchydata.com/v1beta1
+kind: PostgresCluster
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"postgres-operator.crunchydata.com/v1beta1","kind":"PostgresCluster","metadata":{"annotations":{},"name":"hippo","namespace":"emds"},"spec":{"backups":{"pgbackrest":{"configuration":[{"secret":{"name":"pgo-s3-creds"}}],"global":{"log-level-console":"debug","log-level-file":"debug","repo1-path":"/emds/hippo","repo1-s3-uri-style":"path","repo1-storage-verify-tls":"n"},"image":"devmspksharbor.in.staffservice.co.jp/library/crunchy-pgbackrest:centos8-2.36-0","repos":[{"name":"repo1","s3":{"bucket":"crunchy-postgresql-backup","endpoint":"nginx-rp-for-minio.pgo-star","region":"Tokyo"}}]}},"databaseInitSQL":{"key":"init.sql","name":"hippo-init-sql"},"image":"devmspksharbor.in.staffservice.co.jp/library/crunchy-postgres:centos8-13.5-0","instances":[{"dataVolumeClaimSpec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"100Gi"}},"storageClassName":"csi"},"name":"psql-star-pg","replicas":1,"resources":{"limits":{"cpu":2,"memory":"6Gi"},"requests":{"cpu":1,"memory":"1Gi"}}}],"patroni":{"dynamicConfiguration":{"postgresql":{"parameters":{"checkpoint_completion_target":0.9,"default_statistics_target":100,"default_transaction_read_only":false,"dynamic_shared_memory_type":"posix","effective_cache_size":"6GB","effective_io_concurrency":200,"log_connections":true,"log_destination":"stderr","logging_collector":false,"maintenance_work_mem":"512MB","max_connections":200,"max_wal_size":"4GB","min_wal_size":"1GB","random_page_cost":1.1,"shared_buffers":"1GB","wal_buffers":"16MB","work_mem":"1024kB"},"pg_hba":["local repication all   trust","local all all   trust","host replication all 127.0.0.1/32 trust","host replication all ::1/128 trust","host all all 127.0.0.1/32 trust","host all all 0.0.0.0/0 md5","host replication postgres 0.0.0.0/0 md5"]}}},"port":5432,"postgresVersion":13}}
+  creationTimestamp: "2022-02-17T06:12:09Z"
+  finalizers:
+  - postgres-operator.crunchydata.com/finalizer
+  generation: 7
+  managedFields:
+  - apiVersion: postgres-operator.crunchydata.com/v1beta1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        f:metadata:
+          .: {}
+          f:annotations:
+            .: {}
+            f:restarted: {}
+    manager: kubectl-patch
+    operation: Update
+    time: "2022-04-16T05:48:06Z"
+  - apiVersion: postgres-operator.crunchydata.com/v1beta1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:kubectl.kubernetes.io/last-applied-configuration: {}
+      f:spec:
+        .: {}
+        f:backups:
+          .: {}
+          f:pgbackrest:
+            .: {}
+            f:configuration: {}
+            f:global:
+              .: {}
+              f:log-level-console: {}
+              f:log-level-file: {}
+              f:repo1-path: {}
+              f:repo1-s3-uri-style: {}
+              f:repo1-storage-verify-tls: {}
+            f:image: {}
+            f:repos:
+              .: {}
+              k:{"name":"repo1"}:
+                .: {}
+                f:name: {}
+                f:s3:
+                  .: {}
+                  f:endpoint: {}
+                  f:region: {}
+        f:databaseInitSQL:
+          .: {}
+          f:key: {}
+          f:name: {}
+        f:image: {}
+        f:instances:
+          .: {}
+          k:{"name":"psql-star-pg"}:
+            .: {}
+            f:dataVolumeClaimSpec:
+              .: {}
+              f:accessModes: {}
+              f:resources:
+                .: {}
+                f:requests:
+                  .: {}
+                  f:storage: {}
+              f:storageClassName: {}
+            f:name: {}
+            f:replicas: {}
+            f:resources:
+              .: {}
+              f:limits:
+                .: {}
+                f:cpu: {}
+                f:memory: {}
+              f:requests:
+                .: {}
+                f:cpu: {}
+                f:memory: {}
+        f:patroni:
+          .: {}
+          f:dynamicConfiguration:
+            .: {}
+            f:postgresql: {}
+          f:leaderLeaseDurationSeconds: {}
+          f:port: {}
+          f:syncPeriodSeconds: {}
+        f:port: {}
+        f:postgresVersion: {}
+    manager: kubectl-client-side-apply
+    operation: Update
+    time: "2022-04-16T06:10:37Z"
+  - apiVersion: postgres-operator.crunchydata.com/v1beta1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        f:backups:
+          f:pgbackrest:
+            f:repos:
+              k:{"name":"repo1"}:
+                f:s3:
+                  f:bucket: {}
+    manager: kubectl-edit
+    operation: Update
+    time: "2022-05-24T05:32:06Z"
+  - apiVersion: postgres-operator.crunchydata.com/v1beta1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:finalizers:
+          .: {}
+          v:"postgres-operator.crunchydata.com/finalizer": {}
+      f:status:
+        .: {}
+        f:conditions:
+          .: {}
+          k:{"type":"PGBackRestReplicaCreate"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:message: {}
+            f:observedGeneration: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"PGBackRestReplicaRepoReady"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:message: {}
+            f:observedGeneration: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+        f:databaseInitSQL: {}
+        f:databaseRevision: {}
+        f:instances:
+          .: {}
+          k:{"name":"psql-star-pg"}:
+            .: {}
+            f:name: {}
+            f:readyReplicas: {}
+            f:replicas: {}
+            f:updatedReplicas: {}
+        f:monitoring:
+          .: {}
+          f:exporterConfiguration: {}
+        f:observedGeneration: {}
+        f:patroni:
+          .: {}
+          f:systemIdentifier: {}
+        f:pgbackrest:
+          .: {}
+          f:repos:
+            .: {}
+            k:{"name":"repo1"}:
+              .: {}
+              f:name: {}
+              f:replicaCreateBackupComplete: {}
+              f:repoOptionsHash: {}
+              f:stanzaCreated: {}
+        f:proxy:
+          .: {}
+          f:pgBouncer:
+            .: {}
+            f:postgresRevision: {}
+        f:usersRevision: {}
+    manager: postgrescluster-controller
+    operation: Update
+    time: "2022-05-24T05:44:47Z"
+  name: hippo
+  namespace: emds
+  resourceVersion: "300795317"
+  uid: caac6bda-d199-490b-8f94-c94770512ba0
+spec:
+  backups:
+    pgbackrest:
+      configuration:
+      - secret:
+          name: pgo-s3-creds
+      global:
+        log-level-console: debug
+        log-level-file: debug
+        repo1-path: /emds/hippo
+        repo1-s3-uri-style: path
+        repo1-storage-verify-tls: "n"
+      image: devmspksharbor.in.staffservice.co.jp/library/crunchy-pgbackrest:centos8-2.36-0
+      repos:
+      - name: repo1
+        s3:
+          bucket: crunchy-wal-backup
+          endpoint: nginx-rp-for-minio.pgo-star
+          region: Tokyo
+  databaseInitSQL:
+    key: init.sql
+    name: hippo-init-sql
+  image: devmspksharbor.in.staffservice.co.jp/library/crunchy-postgres:centos8-13.5-0
+  instances:
+  - dataVolumeClaimSpec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Gi
+      storageClassName: csi
+    name: psql-star-pg
+    replicas: 1
+    resources:
+      limits:
+        cpu: 2
+        memory: 6Gi
+      requests:
+        cpu: 1
+        memory: 1Gi
+  metadata:
+    annotations:
+      restarted: Sat Apr 16 15:18:01 JST 2022
+  patroni:
+    dynamicConfiguration:
+      postgresql:
+        parameters:
+          checkpoint_completion_target: 0.9
+          default_statistics_target: 100
+          default_transaction_read_only: false
+          dynamic_shared_memory_type: posix
+          effective_cache_size: 6GB
+          effective_io_concurrency: 200
+          log_connections: true
+          log_destination: stderr
+          logging_collector: false
+          maintenance_work_mem: 512MB
+          max_connections: 200
+          max_wal_size: 4GB
+          min_wal_size: 1GB
+          random_page_cost: 1.1
+          shared_buffers: 1GB
+          wal_buffers: 16MB
+          work_mem: 1024kB
+        pg_hba:
+        - local repication all   trust
+        - local all all   trust
+        - host replication all 127.0.0.1/32 trust
+        - host replication all ::1/128 trust
+        - host all all 127.0.0.1/32 trust
+        - host all all 0.0.0.0/0 md5
+        - host replication postgres 0.0.0.0/0 md5
+    leaderLeaseDurationSeconds: 30
+    port: 8008
+    syncPeriodSeconds: 10
+  port: 5432
+  postgresVersion: 13
+status:
+  conditions:
+  - lastTransitionTime: "2022-05-24T05:33:24Z"
+    message: pgBackRest replica create repo is ready for backups
+    observedGeneration: 7
+    reason: StanzaCreated
+    status: "True"
+    type: PGBackRestReplicaRepoReady
+  - lastTransitionTime: "2022-05-24T05:44:47Z"
+    message: pgBackRest replica creation is now possible
+    observedGeneration: 7
+    reason: RepoBackupComplete
+    status: "True"
+    type: PGBackRestReplicaCreate
+  databaseInitSQL: hippo-init-sql
+  databaseRevision: f886c77f4
+  instances:
+  - name: psql-star-pg
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+  monitoring:
+    exporterConfiguration: 559c4c97d6
+  observedGeneration: 7
+  patroni:
+    systemIdentifier: "7065559383796916294"
+  pgbackrest:
+    repos:
+    - name: repo1
+      replicaCreateBackupComplete: true
+      repoOptionsHash: 6bfff559dd
+      stanzaCreated: true
+  proxy:
+    pgBouncer:
+      postgresRevision: 5c9966f6bc
+  usersRevision: 5d4dd8b4d9
