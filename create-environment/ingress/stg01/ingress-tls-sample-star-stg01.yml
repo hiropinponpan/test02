@@ -1,0 +1,42 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: default
+  name: sample-star-frontend
+  annotations:
+    kubernetes.io/ingress.class: "nsx"
+    ncp/use-regex: "True"
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  tls:
+    - secretName: stg-ingress-cert
+  rules:
+  - host: sample-stg01.in.staffservice.co.jp
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: sample-star-frontend
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: default
+  name: sample-star-backend
+  annotations:
+    kubernetes.io/ingress.class: "nsx"
+    ncp/use-regex: "True"
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  tls:
+    - secretName: stg-ingress-cert
+  rules:
+  - host: sample-stg01.in.staffservice.co.jp
+    http:
+      paths:
+      - path: /api(/|$)(.*)
+        backend:
+          serviceName: sample-star-backend
+          servicePort: 80

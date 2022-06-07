@@ -1,0 +1,44 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: cms-can
+  name: cms-can-star-frontend
+  annotations:
+    kubernetes.io/ingress.class: "nsx"
+    ncp/use-regex: "True"
+    kubernetes.io/ingress.allow-http: "false"
+    ncp/http-redirect: "True"
+spec:
+  tls:
+    - secretName: dev-ingress-cert
+  rules:
+  - host: cms-can-dev.in.staffservice.co.jp
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: cms-can-star-frontend
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: cms-can
+  name: cms-can-star-backend
+  annotations:
+    kubernetes.io/ingress.class: "nsx"
+    ncp/use-regex: "True"
+    kubernetes.io/ingress.allow-http: "false"
+    ncp/http-redirect: "True"
+spec:
+  tls:
+    - secretName: dev-ingress-cert
+  rules:
+  - host: cms-can-dev.in.staffservice.co.jp
+    http:
+      paths:
+      - path: /api(/|$)(.*)
+        backend:
+          serviceName: cms-can-star-backend
+          servicePort: 80

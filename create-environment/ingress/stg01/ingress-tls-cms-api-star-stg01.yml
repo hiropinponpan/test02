@@ -1,0 +1,44 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: cms-bff
+  name: cms-api-star-frontend
+  annotations:
+    kubernetes.io/ingress.class: "nsx"
+    ncp/use-regex: "True"
+    kubernetes.io/ingress.allow-http: "false"
+    ncp/http-redirect: "True"
+spec:
+  rules:
+  - host: cms-api-stg.in.staffservice.co.jp
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: cms-api-star-frontend
+          servicePort: 80
+  tls:
+    - secretName: stg-ingress-cert
+---
+#apiVersion: extensions/v1beta1
+#kind: Ingress
+#metadata:
+#  namespace: cms-bff
+#  name: cms-api-star-backend
+#  annotations:
+#    kubernetes.io/ingress.class: "nsx"
+#    ncp/use-regex: "True"
+#    kubernetes.io/ingress.allow-http: "false"
+#    ncp/http-redirect: "True"
+#spec:
+#  rules:
+#  - host: cms-api-stg.in.staffservice.co.jp
+#    http:
+#      paths:
+#      - path: /api(/|$)(.*)
+#        backend:
+#          serviceName: cms-api-star-backend
+#          servicePort: 80
+#  tls:
+#    - secretName: stg-ingress-cert

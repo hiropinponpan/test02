@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: azure-test-sa-cmspoc2
+  namespace: cmspoc2
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: azure-role-test-binding-cmspoc2
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: azure-cluster-test-role
+subjects:
+- apiGroup: ""
+  kind: ServiceAccount
+  name: azure-test-sa-cmspoc2
+  namespace: cmspoc2

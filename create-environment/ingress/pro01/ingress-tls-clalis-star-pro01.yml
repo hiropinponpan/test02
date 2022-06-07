@@ -1,0 +1,44 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: cross
+  name: clalis-star-frontend
+  annotations:
+    kubernetes.io/ingress.class: "nsx"
+    ncp/use-regex: "True"
+    kubernetes.io/ingress.allow-http: "false"
+    ncp/http-redirect: "True"
+spec:
+  rules:
+  - host: clalis.in.staffservice.co.jp
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: clalis-star-frontend
+          servicePort: 80
+  tls:
+    - secretName: pro-ingress-cert
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: cross
+  name: clalis-star-backend
+  annotations:
+    kubernetes.io/ingress.class: "nsx"
+    ncp/use-regex: "True"
+    kubernetes.io/ingress.allow-http: "false"
+    ncp/http-redirect: "True"
+spec:
+  rules:
+  - host: clalis.in.staffservice.co.jp
+    http:
+      paths:
+      - path: /api(/|$)(.*)
+        backend:
+          serviceName: clalis-star-backend
+          servicePort: 80
+  tls:
+    - secretName: pro-ingress-cert

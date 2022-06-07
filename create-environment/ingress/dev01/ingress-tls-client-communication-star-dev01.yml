@@ -1,0 +1,44 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: client-communication
+  name: client-communication-star-frontend
+  annotations:
+    kubernetes.io/ingress.class: "nsx"
+    ncp/use-regex: "True"
+    kubernetes.io/ingress.allow-http: "false"
+    ncp/http-redirect: "True"
+spec:
+  rules:
+  - host: client-communication-dev.in.staffservice.co.jp
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: client-communication-star-frontend
+          servicePort: 80
+  tls:
+    - secretName: dev-ingress-cert
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: client-communication
+  name: client-communication-star-backend
+  annotations:
+    kubernetes.io/ingress.class: "nsx"
+    ncp/use-regex: "True"
+    kubernetes.io/ingress.allow-http: "false"
+    ncp/http-redirect: "True"
+spec:
+  rules:
+  - host: client-communication-dev.in.staffservice.co.jp
+    http:
+      paths:
+      - path: /api(/|$)(.*)
+        backend:
+          serviceName: client-communication-star-backend
+          servicePort: 80
+  tls:
+    - secretName: dev-ingress-cert

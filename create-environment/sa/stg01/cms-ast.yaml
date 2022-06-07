@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: azure-test-sa-cms-ast
+  namespace: cms-ast
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: azure-role-test-binding-cms-ast
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: azure-cluster-test-role
+subjects:
+- apiGroup: ""
+  kind: ServiceAccount
+  name: azure-test-sa-cms-ast
+  namespace: cms-ast
