@@ -1,0 +1,10 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: vsan
+provisioner: kubernetes.io/vsphere-volume
+parameters:
+  datastore: VxRail-Virtual-SAN-Datastore-5f6b325c-28b0-4a54-b257-18e2660767fe
+  diskformat: thin
+  fstype: ext3
+

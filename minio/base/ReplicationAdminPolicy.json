@@ -1,0 +1,25 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "admin:*"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::*"
+            ],
+            "Sid": "EnableRemoteBucketConfiguration"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::*"
+            ],
+            "Sid": "EnableReplicationRuleConfiguration"
+        }
+    ]
+}

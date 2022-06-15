@@ -1,0 +1,124 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: minio-minio-0
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: csi
+  csi:
+    fsType: ext4
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: minio
+  serviceName: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: minio
+        image: devmspksharbor.in.staffservice.co.jp/install-packages/minio/minio
+        args:
+        - server
+        - /storage
+        env:
+        - name: MINIO_ACCESS_KEY
+          value: minio
+        - name: MINIO_SECRET_KEY
+          value: minio-secret
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: minio
+          mountPath: "/storage"
+  volumeClaimTemplates:
+  - metadata:
+      name: minio
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "minio-storage"
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9000
+      targetPort: 9000
+      protocol: TCP
+  selector:
+    app: minio
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: minio
+  serviceName: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: minio
+        image: devmspksharbor.in.staffservice.co.jp/install-packages/minio/minio
+        args:
+        - server
+        - /storage
+        env:
+        - name: MINIO_ACCESS_KEY
+          value: minio
+        - name: MINIO_SECRET_KEY
+          value: minio-secret
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: minio
+          mountPath: "/storage"
+  volumeClaimTemplates:
+  - metadata:
+      name: minio
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "minio-storage"
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9000
+      targetPort: 9000
+      protocol: TCP
+  selector:
+    app: minio

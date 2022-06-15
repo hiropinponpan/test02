@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-pv-claim-02
+  labels:
+    app: minio-storage-claim-02
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: csi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio-deployment-02
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: minio-02
+  template:
+    metadata:
+      labels:
+        app: minio-02
+    spec:
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: minio-pv-claim-02
+      containers:
+      - name: minio
+        image: devmspksharbor.in.staffservice.co.jp/install-packages/minio/minio:RELEASE.2022-05-08T23-50-31Z
+        args:
+        - server
+        - /storage
+        - --console-address
+        - ':9001'
+        env:
+        - name: MINIO_ACCESS_KEY
+          value: minio
+        - name: MINIO_SECRET_KEY
+          value: minio-secret
+        ports:
+        - containerPort: 9000
+        - containerPort: 9001
+        volumeMounts:
+        - name: storage
+          mountPath: "/storage"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-service-02
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9000
+      targetPort: 9000
+      protocol: TCP
+      name: server-port
+    - port: 9001
+      targetPort: 9001
+      protocol: TCP
+      name: console-port
+  selector:
+    app: minio-02
+
